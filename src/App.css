@@ -1,0 +1,58 @@
+.app-root {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-tabs {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.category-button {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.category-button.active {
+  background-color: black;
+  color: white;
+}
+
+.dishes-list {
+  display: grid;
+  gap: 20px;
+}
+
+.dish {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.dish-image {
+  width: 150px;
+  border-radius: 8px;
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-btn {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.not-available {
+  color: red;
+  font-weight: bold;
+}

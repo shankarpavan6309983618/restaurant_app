@@ -1,0 +1,142 @@
+:root {
+  --max-width: 980px;
+  --muted: #666;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: Inter, Arial, sans-serif;
+  margin: 0;
+  background: #fbfbfb;
+  color: #111;
+}
+.page {
+  max-width: var(--max-width);
+  margin: 16px auto;
+  padding: 16px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e6e6e6;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+.header p {
+  margin: 0;
+  color: var(--muted);
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cart-count {
+  font-weight: 700;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0;
+  margin-bottom: 12px;
+}
+.tab {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: #fff;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.tab.active {
+  background: #111;
+  color: #fff;
+  border: 2px solid #111;
+}
+
+/* Dish list & card */
+.dish-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+.dish-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  align-items: center;
+  background: #fff;
+}
+.dish-image {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.dish-body {
+  flex: 1;
+}
+.dish-body h3 {
+  margin: 0 0 6px 0;
+}
+.dish-desc {
+  margin: 0 0 6px 0;
+  color: var(--muted);
+}
+.dish-price {
+  margin: 0 0 6px 0;
+  font-weight: 600;
+}
+.dish-cal {
+  margin: 0 0 6px 0;
+  color: var(--muted);
+}
+.custom {
+  color: #007bff;
+  margin: 0 0 6px 0;
+}
+.not-available {
+  color: #ff4d4f;
+  margin: 0 0 6px 0;
+}
+
+/* Quantity controls */
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qty-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+}
+.qty {
+  min-width: 20px;
+  text-align: center;
+}
+.dash {
+  color: #999;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .dish-card {
+    flex-direction: row;
+  }
+  .dish-image {
+    width: 100px;
+    height: 70px;
+  }
+}
