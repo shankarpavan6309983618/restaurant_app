@@ -4,69 +4,69 @@ import Header from './components/Header'
 import Tabs from './components/Tabs'
 import DishCard from './components/DishCard'
 
-export default function App() {
+const App = () => {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [activeCategory, setActiveCategory] = useState(null)
+  const [activeCategory, setActiveCategory] = useState('')
 
   useEffect(() => {
-    const url =
-      'https://apis2.ccbp.in/restaurant-app/restaurant-menu-list-details'
-    fetch(url)
-      .then(res => {
-        if (!res.ok) throw new Error('Network response not ok')
-        return res.json()
-      })
-      .then(json => {
-        // API returns an array at top-level (per your pasted sample). Normalize:
-        const payload = Array.isArray(json) ? json[0] : json
+    const fetchData = async () => {
+      try {
+        const url =
+          'https://apis2.ccbp.in/restaurant-app/restaurant-menu-list-details'
+
+        const response = await fetch(url)
+        const jsonData = await response.json()
+
+        const payload = Array.isArray(jsonData) ? jsonData[0] : jsonData
+
         setData(payload)
-        const first =
-          (payload.table_menu_list &&
-            payload.table_menu_list[0] &&
-            payload.table_menu_list[0].menu_category) ||
-          null
-        setActiveCategory(first)
+
+        const firstCategory =
+          payload.table_menu_list && payload.table_menu_list.length > 0
+            ? payload.table_menu_list[0].menu_category
+            : ''
+
+        setActiveCategory(firstCategory)
+      } catch (e) {
+        console.error(e)
+      } finally {
         setLoading(false)
-      })
-      .catch(err => {
-        setError(err.message)
-        setLoading(false)
-      })
+      }
+    }
+
+    fetchData()
   }, [])
 
-  if (loading)
+  if (loading) {
     return (
       <div className="page">
         <p>Loading...</p>
       </div>
     )
-  if (error)
-    return (
-      <div className="page">
-        <p>Error: {error}</p>
-      </div>
-    )
+  }
 
-  const categories = data.table_menu_list || []
-  const active = activeCategory
-  const activeObj = categories.find(c => c.menu_category === active)
-  const dishes = (activeObj && activeObj.category_dishes) || []
+  const categories = data?.table_menu_list || []
+  const activeObj = categories.find(
+    each => each.menu_category === activeCategory,
+  )
+  const dishes = activeObj?.category_dishes || []
 
   return (
     <CartProvider>
       <div className="page">
         <Header restaurantName={data.restaurant_name} />
+
         <Tabs
           categories={categories}
-          active={active}
+          active={activeCategory}
           onChange={setActiveCategory}
         />
+
         <main>
           <section className="dish-list" role="list">
-            {dishes.map(d => (
-              <DishCard key={d.dish_id} dish={d} />
+            {dishes.map(eachDish => (
+              <DishCard key={eachDish.dish_id} dish={eachDish} />
             ))}
           </section>
         </main>
@@ -74,3 +74,5 @@ export default function App() {
     </CartProvider>
   )
 }
+
+export default App

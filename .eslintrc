@@ -5,9 +5,7 @@
   },
   "parser": "babel-eslint",
   "extends": [
-    "react-app",
-    "airbnb",
-    "prettier"
+    "react-app"
   ],
   "parserOptions": {
     "ecmaFeatures": {
