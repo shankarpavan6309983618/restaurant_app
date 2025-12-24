@@ -1,92 +1,101 @@
-// import React from 'react'
-import {useCart} from '../context/CartContext'
+import {Component} from 'react'
+import {CartContext} from '../context/CartContext'
 
-export default function DishCard({dish}) {
-  const {counts, increment, decrement} = useCart()
+import './DishCard.css'
 
-  const id = dish.dish_id
-  const qty = counts[id] || 0
+class DishCard extends Component {
+  state = {
+    quantity: 0,
+  }
 
-  const name = dish.dish_name || ''
-  const desc = dish.dish_description || ''
-  const calories = dish.dish_calories || ''
-  const price = dish.dish_price ?? ''
-  const currency = dish.dish_currency || ''
-  const image = dish.dish_image || ''
+  render() {
+    const {dish} = this.props
+    const {quantity} = this.state
 
-  // Handle dish availability safely without nested ternaries
-  const availability = dish.dish_Availability ?? dish.dish_availability ?? true
+    const {
+      dish_id,
+      dish_name,
+      dish_description,
+      dish_price,
+      dish_currency,
+      dish_image,
+      dish_calories,
+      dish_Availability,
+      addonCat,
+    } = dish
 
-  const addons = dish.addonCat || dish.addoncat || []
-  const hasAddons = Array.isArray(addons) && addons.length > 0
-  const available = availability === true || availability === 'true'
+    const isAvailable = dish_Availability === true
 
-  return (
-    <article className="dish-card" data-testid={`dish-${name}`}>
-      <img
-        src={image}
-        alt={name}
-        className="dish-image"
-        data-testid={`image-${id}`}
-      />
+    return (
+      <CartContext.Consumer>
+        {value => {
+          const {addCartItem} = value
 
-      <div className="dish-body">
-        <h3>{name}</h3>
+          const onClickIncrement = () => {
+            this.setState(prev => ({quantity: prev.quantity + 1}))
+          }
 
-        <p className="dish-desc" data-testid={`desc-${id}`}>
-          {desc}
-        </p>
+          const onClickDecrement = () => {
+            if (quantity > 0) {
+              this.setState(prev => ({quantity: prev.quantity - 1}))
+            }
+          }
 
-        <p className="dish-price" data-testid={`price-${id}`}>
-          {currency} {price}
-        </p>
+          const onClickAddToCart = () => {
+            addCartItem({...dish, quantity})
+          }
 
-        <p className="dish-cal" data-testid={`cal-${id}`}>
-          {calories} calories
-        </p>
+          return (
+            <li className="dish-item">
+              <img src={dish_image} alt={dish_name} className="dish-image" />
 
-        {hasAddons && (
-          <p data-testid="customizations" className="custom">
-            Customizations available
-          </p>
-        )}
+              <div className="dish-details">
+                <h1 className="dish-name">{dish_name}</h1>
 
-        {!available && (
-          <p data-testid="not-available" className="not-available">
-            Not available
-          </p>
-        )}
-      </div>
+                <p className="dish-price">
+                  {dish_currency} {dish_price}
+                </p>
 
-      <div className="qty-controls">
-        {available ? (
-          <>
-            <button
-              type="button"
-              className="qty-btn"
-              onClick={() => decrement(id)}
-              data-testid={`decrement-${id}`}
-            >
-              -
-            </button>
+                <p className="dish-description">{dish_description}</p>
 
-            <div className="qty" data-testid={`qty-${id}`}>
-              {qty}
-            </div>
+                <p className="dish-calories">{dish_calories} calories</p>
 
-            <button
-              type="button"
-              className="qty-btn"
-              onClick={() => increment(id)}
-              data-testid={`increment-${id}`}
-            >
-              +
-            </button>
-          </>
-        ) : (
-          <div className="dash">—</div>
-        )}
-      </div>
-    </article>
-  )
+                {addonCat.length > 0 && (
+                  <p className="customizations">Customizations available</p>
+                )}
+
+                {!isAvailable && <p className="not-available">Not available</p>}
+
+                {isAvailable && (
+                  <div className="quantity-controller">
+                    <button type="button" onClick={onClickDecrement}>
+                      -
+                    </button>
+
+                    <p>{quantity}</p>
+
+                    <button type="button" onClick={onClickIncrement}>
+                      +
+                    </button>
+                  </div>
+                )}
+
+                {quantity > 0 && (
+                  <button
+                    type="button"
+                    className="add-to-cart-btn"
+                    onClick={onClickAddToCart}
+                  >
+                    ADD TO CART
+                  </button>
+                )}
+              </div>
+            </li>
+          )
+        }}
+      </CartContext.Consumer>
+    )
+  }
 }
+
+export default DishCard

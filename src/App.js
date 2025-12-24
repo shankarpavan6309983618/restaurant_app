@@ -1,78 +1,32 @@
-import {useEffect, useState} from 'react'
-import {CartProvider} from './context/CartContext'
-import Header from './components/Header'
-import Tabs from './components/Tabs'
-import DishCard from './components/DishCard'
+import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom'
+import Cookies from 'js-cookie'
 
-const App = () => {
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [activeCategory, setActiveCategory] = useState('')
+import Login from './components/Login'
+import Home from './components/Home'
+import Cart from './components/Cart'
+import {CartContextProvider} from './context/CartContext'
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url =
-          'https://apis2.ccbp.in/restaurant-app/restaurant-menu-list-details'
+const ProtectedRoute = props => {
+  const jwtToken = Cookies.get('jwt_token')
 
-        const response = await fetch(url)
-        const jsonData = await response.json()
-
-        const payload = Array.isArray(jsonData) ? jsonData[0] : jsonData
-
-        setData(payload)
-
-        const firstCategory =
-          payload.table_menu_list && payload.table_menu_list.length > 0
-            ? payload.table_menu_list[0].menu_category
-            : ''
-
-        setActiveCategory(firstCategory)
-      } catch (e) {
-        console.error(e)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="page">
-        <p>Loading...</p>
-      </div>
-    )
+  if (jwtToken === undefined) {
+    return <Redirect to="/login" />
   }
 
-  const categories = data?.table_menu_list || []
-  const activeObj = categories.find(
-    each => each.menu_category === activeCategory,
-  )
-  const dishes = activeObj?.category_dishes || []
-
-  return (
-    <CartProvider>
-      <div className="page">
-        <Header restaurantName={data.restaurant_name} />
-
-        <Tabs
-          categories={categories}
-          active={activeCategory}
-          onChange={setActiveCategory}
-        />
-
-        <main>
-          <section className="dish-list" role="list">
-            {dishes.map(eachDish => (
-              <DishCard key={eachDish.dish_id} dish={eachDish} />
-            ))}
-          </section>
-        </main>
-      </div>
-    </CartProvider>
-  )
+  return <Route {...props} />
 }
+
+const App = () => (
+  <BrowserRouter>
+    <CartContextProvider>
+      <Switch>
+        <Route exact path="/login" component={Login} />
+        <ProtectedRoute exact path="/" component={Home} />
+        <ProtectedRoute exact path="/cart" component={Cart} />
+        <Redirect to="/login" />
+      </Switch>
+    </CartContextProvider>
+  </BrowserRouter>
+)
 
 export default App

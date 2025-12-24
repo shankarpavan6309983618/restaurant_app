@@ -1,0 +1,21 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.restaurant-name-link {
+  text-decoration: none;
+  color: black;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-count {
+  font-weight: bold;
+}

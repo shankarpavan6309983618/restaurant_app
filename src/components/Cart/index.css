@@ -1,0 +1,22 @@
+.cart-container {
+  padding: 16px;
+}
+
+.cart-content-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.cart-heading {
+  margin-bottom: 16px;
+}
+
+.remove-all-btn {
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.cart-items-list {
+  list-style-type: none;
+  padding: 0;
+}
